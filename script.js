@@ -35,8 +35,20 @@ const strokeArc = function (x, y, r) {
     ctx.closePath();
 }
 
+const line = function (x0, y0, x, y) {
+    ctx.strokeStyle = "black";
+    ctx.beginPath();
+    ctx.moveTo(x0, y0);
+    ctx.lineTo(x, y);
+    ctx.closePath();
+    ctx.stroke();
+}
 
-let selectedNode = null;
+const isCursorInNode = function(x, y, node){
+    if (((x-node.x)**2 + (y-node.y)**2) <= node.radius**2){
+        return true;
+    }
+}
 
 const Node = function (x, y, radius, num){
     this.x = x;
@@ -44,7 +56,12 @@ const Node = function (x, y, radius, num){
     this.radius = radius;
     this.num = num;
     this.selected = false;
+    this.arrOfLinkedNode = [];
+    this.posX = null;
+    this.posY = null;
+    this.link = false;
 }
+
 
 Node.prototype = {
     draw : function(){
@@ -55,41 +72,21 @@ Node.prototype = {
     stroke : function(){
         strokeArc(this.x, this.y, this.radius);
     },
-    // select : function(){
-    //     this.selected = !this.selected;
-    // }
+    drawLink: function(){
+        for (let j = 0; j < this.arrOfLinkedNode.length; j++) {
+            line(this.x, this.y, this.arrOfLinkedNode[j].x, this.arrOfLinkedNode[j].y);
+        }
+    },   
 }
-
-const isCursorInNode = function(x, y, node){
-    if (((x-node.x)**2 + (y-node.y)**2) <= node.radius**2){
-        return true;
-    }
-}
-
-let node = [];
-
-
-for (let i = 0; i < 5; i++){
-    node.push(new Node(50 + (i*60), 50, 20, i+1));
-}
-
-//ctx.arc(50, 50, 30, 0, 2*Math.PI, false);
-//ctx.fill();
-
-setInterval(function(){
-    ctx.clearRect(0, 0, cnv.width, cnv.height);
-    for (let i = 0; i < node.length; i++){
-        node[i].draw();
-        if (node[i].selected){
-            node[i].stroke();
-        };
-    }
-}, 30)
 
 window.onmousemove = function(e){
     if (selectedNode){
         selectedNode.x = e.pageX;
         selectedNode.y = e.pageY;
+    }
+    if (nodeForLink && nodeForLink.link){
+        nodeForLink.posX = e.pageX;
+        nodeForLink.posY = e.pageY;
     }
 }
 window.onmousedown = function(e){
@@ -97,7 +94,18 @@ window.onmousedown = function(e){
     for (let i = 0; i < node.length; i++){
         if (isCursorInNode(x, y, node[i])){
             node[i].selected = true;
-            selectedNode = node[i]
+            selectedNode = node[i];
+            //Соединение с выбранной вершиной
+            if (nodeForLink && nodeForLink.link && (node[i].num != nodeForLink.num)){
+                nodeForLink.arrOfLinkedNode.push(node[i])
+                nodeForLink.link = false;
+                nodeForLink = null;
+            }
+            else if(!nodeForLink){
+                nodeForLink = node[i]
+                nodeForLink.posX = x; nodeForLink.posY = y; //Сохранение позиции нажатия
+            }
+            break;
         }
     }
 }
@@ -106,6 +114,16 @@ window.onmouseup = function(e){
         selectedNode.selected = false;
         selectedNode = null;
     }
+    // Флаг на событие соединения вершин
+    if (nodeForLink){
+        if (nodeForLink.posX == e.pageX && nodeForLink.posY == e.pageY){
+            nodeForLink.link = true
+        }
+        else{
+            nodeForLink.link = false;
+            nodeForLink = null;
+        }
+    }
     
 }
 
@@ -113,12 +131,52 @@ cnv.onclick = function(e){
     let i = 0;
     let x = e.pageX, y = e.pageY;
     for (; i < node.length; i++){
-        if (isCursorInNode(x, y, node[i])){
+        if (isCursorInNode(x, y, node[i])){    
             break;
         }
     }
+    // Клик на пустое место
     if (i == node.length){
-        node.push(new Node(x, y, 20, node.length + 1));
+        if (nodeForLink){
+            nodeForLink.link = false;
+            nodeForLink = null;
+        }
+        else{
+            node.push(new Node(x, y, 20, node.length + 1));
+        }
+        
     }
 
 }
+
+// Инициализация графа
+let selectedNode = null;
+let nodeForLink = null;
+let node = [];
+
+for (let i = 0; i < 5; i++){
+    node.push(new Node(50 + (i*60), 50, 20, i+1));
+}
+node[0].arrOfLinkedNode.push(node[2])
+node[0].arrOfLinkedNode.push(node[3])
+node[0].arrOfLinkedNode.push(node[4])
+// Отрисовка редактора
+setInterval(function(){
+    ctx.clearRect(0, 0, cnv.width, cnv.height);
+
+    // Отрисовка события соединеня выбранной вершины
+    if (nodeForLink && nodeForLink.link){
+        line(nodeForLink.x, nodeForLink.y, nodeForLink.posX, nodeForLink.posY);
+    }
+    //Отрисовка связей
+    for (let i = 0; i < node.length; i++){
+        node[i].drawLink();  
+    }
+    //Отрисовка вершин
+    for (let i = 0; i < node.length; i++){
+        node[i].draw();     
+        if (node[i].selected){
+            node[i].stroke();
+        };
+    }
+})

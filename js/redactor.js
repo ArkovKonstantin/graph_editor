@@ -1,6 +1,4 @@
 "use strict";
-//console.log(document);
-//alert(document)
 let cnv = document.getElementById("canvas");
 let ctx = cnv.getContext("2d");
 
@@ -56,12 +54,15 @@ const Node = function (x, y, radius, num){
     this.radius = radius;
     this.num = num;
     this.selected = false;
-    this.arrOfLinkedNode = [];
+    this.edges = [];
     this.posX = null;
     this.posY = null;
     this.link = false;
 }
-
+const Edge = function(node, dist = null){
+    this.neighbour = node;
+    this.distance = dist;
+}
 
 Node.prototype = {
     draw : function(){
@@ -73,8 +74,8 @@ Node.prototype = {
         strokeArc(this.x, this.y, this.radius);
     },
     drawLink: function(){
-        for (let j = 0; j < this.arrOfLinkedNode.length; j++) {
-            line(this.x, this.y, this.arrOfLinkedNode[j].x, this.arrOfLinkedNode[j].y);
+        for (let j = 0; j < this.edges.length; j++) {
+            line(this.x, this.y, this.edges[j].neighbour.x, this.edges[j].neighbour.y);
         }
     },   
 }
@@ -97,7 +98,7 @@ window.onmousedown = function(e){
             selectedNode = node[i];
             //Соединение с выбранной вершиной
             if (nodeForLink && nodeForLink.link && (node[i].num != nodeForLink.num)){
-                nodeForLink.arrOfLinkedNode.push(node[i])
+                nodeForLink.edges.push(new Edge(node[i]));
                 nodeForLink.link = false;
                 nodeForLink = null;
             }
@@ -149,6 +150,7 @@ cnv.onclick = function(e){
 
 }
 
+
 // Инициализация графа
 let selectedNode = null;
 let nodeForLink = null;
@@ -157,13 +159,12 @@ let node = [];
 for (let i = 0; i < 5; i++){
     node.push(new Node(50 + (i*60), 50, 20, i+1));
 }
-node[0].arrOfLinkedNode.push(node[2])
-node[0].arrOfLinkedNode.push(node[3])
-node[0].arrOfLinkedNode.push(node[4])
+node[0].edges.push(new Edge(node[2], 2));
+node[0].edges.push(new Edge(node[3], 3));
+node[0].edges.push(new Edge(node[4], 4));
 // Отрисовка редактора
 setInterval(function(){
     ctx.clearRect(0, 0, cnv.width, cnv.height);
-
     // Отрисовка события соединеня выбранной вершины
     if (nodeForLink && nodeForLink.link){
         line(nodeForLink.x, nodeForLink.y, nodeForLink.posX, nodeForLink.posY);

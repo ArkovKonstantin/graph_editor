@@ -6,7 +6,7 @@ let inputWeight = document.getElementById("input-weight");
 cnv.height = 600;
 cnv.width = 600;
 //cnv.style.backgroundColor = "#b4b4b4";
-cnv.style.backgroundImage = "url(setka.png)";
+//cnv.style.backgroundImage = "url(setka.png)";
 cnv.style.border = "1px solid black";
 // Флаг на событие ввода веса
 window.isInput = false;
@@ -77,9 +77,7 @@ const isCursorInEdge = function(x, y, node, e){
             window.j = i;
             return true;
         }
-        
-    }
-
+    }   
 }
 
 const Node = function (x, y, radius, num){

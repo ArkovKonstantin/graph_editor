@@ -1,11 +1,14 @@
 html, body{
     padding: 0px;
+    margin: 0px;
     width: 100%;
     height: 100%;
+    font-family: monospace;
 }
 
 .grid {
     display: grid;
+    margin-top: 40px;
     grid-template-columns: 200px 600px 300px;
     grid-gap: 30px;
     justify-content: center;
@@ -13,12 +16,11 @@ html, body{
 }
 
 .grid div {
-    background-color: brown;
-    padding: 5px;
-    margin-top: 20px;
-    font-size: 20px;
-    color: aliceblue; 
-    font-family: monospace;
+    /* background-color: brown; */
+    /* padding: 5px; */
+    
+    /* font-size: 20px; */
+    /* color: aliceblue;  */
 }
 .grid div:nth-child(2){
     padding: 0px;
@@ -32,4 +34,51 @@ html, body{
     left: 0px;
     height: 15px;
     width: 40px;
+}
+.algoritm-section{
+    padding: 0px;
+}
+#tabs{
+    font-size: 0px;
+    position: relative;
+}
+
+#tabs .tab{
+    font-size: 13px;
+    font-weight: bold;
+    color: #b8b8b8;
+    display: inline-block;
+    padding: 5px 10px;
+    cursor: pointer;
+    position: relative;
+    z-index: 5;
+    /* border: 1px solid black; */
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+}
+
+#tabs .whiteborder{
+    color: #222022;
+    /* border: 1px solid black; */
+    border-bottom: 1px solid #f0f0f0;
+    background-color: #f0f0f0;
+    /* border-radius: 5px 5px 0px 0px; */
+}
+#tabs .tabContent{
+    font-size: 13px;
+    /* width: 300px; */
+    /* height: 60px; */
+    border: 1px solid black;
+    position: relative;
+    top: -1px;
+    padding: 10px;
+    /* border-radius: 0 0 5px 5px; */
+    z-index: 1;
+    background-color: #f0f0f0;
+}
+#tabs .hide{
+    display: none;
+}
+#tabs .show{
+    display: block;
 }

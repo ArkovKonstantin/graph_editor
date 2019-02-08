@@ -10,9 +10,17 @@
     <title>Document</title>
 </head>
 <body>
+        
     <div class="grid">
         <div>
-            <h5>Graph data</h5>
+            Graph data:
+            <textarea rows = 10>
+1
+2
+3
+4
+5
+            </textarea>
         </div>
 
         <div>
@@ -20,12 +28,28 @@
             <input id="input-weight" type="text">
         </div>
 
-        <div>
-                <h5>Algoritms</h5>
-                <input type="button" value="Run" id="btn_run">
-                <input type="button" value="Clear" id="btn_stop">
+        <div class="algoritm-section">
+                <div id="tabs">
+                        <div class="tab whiteborder" style="border-left: 1px solid black;">Dijkstra</div>
+                        <div class="tab">Dfs</div>
+                        <div class="tab">Tab3</div>
+                        <div class="tabContent">
+                                Description:    
+                                <p>Dijkstra's algorithm is an algorithm for finding the shortest paths between nodes in a graph, which may represent, for example, road networks.</p>
+                                <input type="button" value="Run" id="btn_run">
+                                <input type="button" value="Clear" id="btn_stop">
+                        </div>
+                        <div class="tabContent">2</div>
+                        <div class="tabContent">3</div>
+                </div>
+                
+                
+                
         </div>
     </div>
+
+    
+    
 </body>
 
 </html>

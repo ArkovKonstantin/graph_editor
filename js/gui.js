@@ -1,7 +1,9 @@
 import {dijkstra} from "./gijkstra.js";
-
+//Global parametrs
 let btnRun = document.getElementById("btn_run");
 let btnStop = document.getElementById("btn_stop");
+let tab = document.getElementsByClassName("tab");
+let tabContent = document.getElementsByClassName("tabContent");
 
 const clearPaths = function(){
     node.forEach(function(node){
@@ -31,4 +33,28 @@ btnRun.onclick = function(){
         });
         end_node = res.prev[end_node];
     }
+}
+
+window.onload = function(){
+    for (let i = 1; i < tabContent.length; i++){
+        tabContent[i].classList.add("hide");
+    }
+}
+
+document.getElementById("tabs").onclick = function(e){
+    let target = e.target;
+    //console.log(e);
+    if (target.className == "tab"){
+        for (let i = 0; i<tab.length; i++){
+            if (tab[i] == target){
+                tab[i].classList.add("whiteborder");
+                tabContent[i].classList.remove("hide");
+            }
+            else{
+                tab[i].classList.remove("whiteborder");
+                tabContent[i].classList.add("hide");
+            }
+        }
+    }
+    
 }

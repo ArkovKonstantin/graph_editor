@@ -1,18 +1,20 @@
 "use strict";
 let cnv = document.getElementById("canvas");
 let ctx = cnv.getContext("2d");
+let inputWeight = document.getElementById("input-weight");
 
-cnv.height = 500;
-cnv.width = 500;
+cnv.height = 600;
+cnv.width = 600;
 //cnv.style.backgroundColor = "#b4b4b4";
 cnv.style.backgroundImage = "url(setka.png)";
 cnv.style.border = "1px solid black";
-//cnv.style.margin = "30px";
+// Флаг на событие ввода веса
+window.isInput = false;
 
 
 ctx.strokeStyle = "red";
 ctx.lineWidth = 4;
-ctx.font = "16px Comic Sans MS";
+ctx.font = "16px monospace";//Comic Sans MS
 ctx.textBaseline="middle";
 ctx.textAlign = "center";
 
@@ -33,8 +35,8 @@ const strokeArc = function (x, y, r) {
     ctx.closePath();
 }
 
-const line = function (x0, y0, x, y) {
-    ctx.strokeStyle = "black";
+const line = function (x0, y0, x, y, color) {
+    ctx.strokeStyle = color;
     ctx.beginPath();
     ctx.moveTo(x0, y0);
     ctx.lineTo(x, y);
@@ -46,6 +48,38 @@ const isCursorInNode = function(x, y, node){
     if (((x-node.x)**2 + (y-node.y)**2) <= node.radius**2){
         return true;
     }
+}
+const isCursorInEdge = function(x, y, node, e){
+    let delta = 40;
+    let x1 = node.x, y1 = node.y;
+    //console.log(e);
+    for (let i = 0; i < node.edges.length; i++){
+        let x2 = node.edges[i].neighbour.x, y2 = node.edges[i].neighbour.y;
+        if (Math.abs(x1 - x2) <= delta){
+            if (y < Math.max(y1, y2)-node.radius/2 && y > Math.min(y1, y2)+node.radius/2 && 
+            x >= Math.min(x1, x2)-8 && x <= Math.max(x1, x2)+8){
+                //Отображение ввода для веса
+                inputWeight.style.display = "block";
+                inputWeight.style.top = e.pageY + "px";
+                inputWeight.style.left = e.pageX + "px";
+                window.j = i;
+                return true;
+            }
+        }
+        let k = (y2-y1)/(x2-x1);
+        let b = (x2*y1-x1*y2)/(x2-x1);
+        if ((y > k*x + b - delta) && (y <= k*x + b + delta) && 
+        (x >= Math.min(x1, x2) + node.radius/2) && (x <= Math.max(x1, x2)-node.radius/2)){
+            //Отображение ввода для веса
+            inputWeight.style.display = "block";
+            inputWeight.style.top = e.pageY + "px";
+            inputWeight.style.left = e.pageX + "px";
+            window.j = i;
+            return true;
+        }
+        
+    }
+
 }
 
 const Node = function (x, y, radius, num){
@@ -59,9 +93,10 @@ const Node = function (x, y, radius, num){
     this.posY = null;
     this.link = false;
 }
-const Edge = function(node, dist = null){
+const Edge = function(node, dist = 1, color = "black"){
     this.neighbour = node;
     this.distance = dist;
+    this.color = color;
 }
 
 Node.prototype = {
@@ -75,23 +110,39 @@ Node.prototype = {
     },
     drawLink: function(){
         for (let j = 0; j < this.edges.length; j++) {
-            line(this.x, this.y, this.edges[j].neighbour.x, this.edges[j].neighbour.y);
+            line(this.x, this.y, this.edges[j].neighbour.x, this.edges[j].neighbour.y, this.edges[j].color);
+            // Отображение веса ребра
+            ctx.fillStyle = "blue";
+            let x = (this.x + this.edges[j].neighbour.x)/2;
+            let y = (this.y + this.edges[j].neighbour.y)/2;
+            if (Math.abs(this.y - this.edges[j].neighbour.y) <= 100){
+                ctx.fillText(this.edges[j].distance, x, y+20);
+            }
+            else{
+                ctx.fillText(this.edges[j].distance, x+20, y);
+            }
         }
     },   
+}
+inputWeight.onchange = function(){
+    console.log(this.value);
+    node[window.i].edges[window.j].distance = this.value;
+    this.style.display = "none";
+    this.value = "";
 }
 
 window.onmousemove = function(e){
     if (selectedNode){
-        selectedNode.x = e.pageX;
-        selectedNode.y = e.pageY;
+        selectedNode.x = e.pageX - cnv.offsetLeft;
+        selectedNode.y = e.pageY - cnv.offsetTop;
     }
     if (nodeForLink && nodeForLink.link){
-        nodeForLink.posX = e.pageX;
-        nodeForLink.posY = e.pageY;
+        nodeForLink.posX = e.pageX - cnv.offsetLeft;
+        nodeForLink.posY = e.pageY - cnv.offsetTop;
     }
 }
 window.onmousedown = function(e){
-    let x = e.pageX, y = e.pageY;
+    let x = e.pageX - cnv.offsetLeft, y = e.pageY - cnv.offsetTop;
     for (let i = 0; i < node.length; i++){
         if (isCursorInNode(x, y, node[i])){
             node[i].selected = true;
@@ -117,7 +168,7 @@ window.onmouseup = function(e){
     }
     // Флаг на событие соединения вершин
     if (nodeForLink){
-        if (nodeForLink.posX == e.pageX && nodeForLink.posY == e.pageY){
+        if (nodeForLink.posX == e.pageX - cnv.offsetLeft && nodeForLink.posY == e.pageY - cnv.offsetTop){
             nodeForLink.link = true
         }
         else{
@@ -130,9 +181,14 @@ window.onmouseup = function(e){
 
 cnv.onclick = function(e){
     let i = 0;
-    let x = e.pageX, y = e.pageY;
+    let x = e.pageX - cnv.offsetLeft, y = e.pageY - cnv.offsetTop;
+    
     for (; i < node.length; i++){
         if (isCursorInNode(x, y, node[i])){    
+            break;
+        }
+        if (isCursorInEdge(x, y, node[i], e)){
+            window.i = i;
             break;
         }
     }
@@ -149,7 +205,6 @@ cnv.onclick = function(e){
     }
 
 }
-
 
 // Инициализация графа
 let selectedNode = null;

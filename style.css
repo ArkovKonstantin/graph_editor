@@ -1,12 +1,35 @@
 html, body{
     padding: 0px;
-    margin: 0px;
-    /*background-color: aqua;*/
     width: 100%;
     height: 100%;
 }
 
-#cnv {
-    width: 500px;
-    height: 500px;
+.grid {
+    display: grid;
+    grid-template-columns: 200px 600px 300px;
+    grid-gap: 30px;
+    justify-content: center;
+    grid-template-rows: 600px; 
+}
+
+.grid div {
+    background-color: brown;
+    padding: 5px;
+    margin-top: 20px;
+    font-size: 20px;
+    color: aliceblue; 
+    font-family: monospace;
+}
+.grid div:nth-child(2){
+    padding: 0px;
+    color: black;
+
+}
+#input-weight{
+    display: none;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 15px;
+    width: 40px;
 }

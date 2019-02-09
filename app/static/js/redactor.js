@@ -20,7 +20,7 @@ ctx.textAlign = "center";
 
 
 const fillArc = function (x, y, r) {
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "#0f2e3b";
     ctx.beginPath();
     ctx.arc(x, y, r, 0, 2*Math.PI, false)
     ctx.fill();
@@ -28,7 +28,7 @@ const fillArc = function (x, y, r) {
 }
 
 const strokeArc = function (x, y, r) {
-    ctx.strokeStyle = "red";
+    ctx.strokeStyle = "#e8534f";
     ctx.beginPath();
     ctx.arc(x, y, r, 0, 2*Math.PI, false)
     ctx.stroke();
@@ -123,8 +123,9 @@ Node.prototype = {
     },   
 }
 inputWeight.onchange = function(){
-    console.log(this.value);
-    node[window.i].edges[window.j].distance = this.value;
+    let t = Number.parseInt(this.value);
+    console.log(typeof t);
+    node[window.i].edges[window.j].distance = t;
     this.style.display = "none";
     this.value = "";
 }

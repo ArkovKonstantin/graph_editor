@@ -12,7 +12,6 @@ const clearPaths = function(){
         });
     });
 }
-
 btnStop.onclick = clearPaths;
 
 btnRun.onclick = function(){

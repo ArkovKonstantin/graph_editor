@@ -28,7 +28,7 @@ btnRun.onclick = function(){
         node[res.prev[end_node]].edges.forEach(function(edge){
             let idx = edge.neighbour.num - 1;
             if (idx == end_node){
-                edge.color = "red";
+                edge.color = "#e8534f";
             }
         });
         end_node = res.prev[end_node];

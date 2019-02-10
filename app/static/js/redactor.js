@@ -13,22 +13,22 @@ window.isInput = false;
 
 
 ctx.strokeStyle = "red";
-ctx.lineWidth = 4;
-ctx.font = "16px monospace";//Comic Sans MS
+ctx.lineWidth = 2;
+ctx.font = "15px monospace";
 ctx.textBaseline="middle";
 ctx.textAlign = "center";
 
 
 const fillArc = function (x, y, r) {
-    ctx.fillStyle = "#0f2e3b";
+    ctx.fillStyle = "#f0f0f0";
     ctx.beginPath();
     ctx.arc(x, y, r, 0, 2*Math.PI, false)
     ctx.fill();
     ctx.closePath();
 }
 
-const strokeArc = function (x, y, r) {
-    ctx.strokeStyle = "#e8534f";
+const strokeArc = function (x, y, r, color) {
+    ctx.strokeStyle = color;//#e8534f
     ctx.beginPath();
     ctx.arc(x, y, r, 0, 2*Math.PI, false)
     ctx.stroke();
@@ -49,7 +49,7 @@ const isCursorInNode = function(x, y, node){
         return true;
     }
 }
-const isCursorInEdge = function(x, y, node, e){
+const isCursorInEdge = function(x, y, node){
     let delta = 40;
     let x1 = node.x, y1 = node.y;
     //console.log(e);
@@ -60,8 +60,9 @@ const isCursorInEdge = function(x, y, node, e){
             x >= Math.min(x1, x2)-8 && x <= Math.max(x1, x2)+8){
                 //Отображение ввода для веса
                 inputWeight.style.display = "block";
-                inputWeight.style.top = e.pageY + "px";
-                inputWeight.style.left = e.pageX + "px";
+                inputWeight.focus();
+                inputWeight.style.top = (y1+y2)/2 + "px";
+                inputWeight.style.left = (x1+x2)/2+ "px";
                 window.j = i;
                 return true;
             }
@@ -72,8 +73,9 @@ const isCursorInEdge = function(x, y, node, e){
         (x >= Math.min(x1, x2) + node.radius/2) && (x <= Math.max(x1, x2)-node.radius/2)){
             //Отображение ввода для веса
             inputWeight.style.display = "block";
-            inputWeight.style.top = e.pageY + "px";
-            inputWeight.style.left = e.pageX + "px";
+            inputWeight.focus();
+            inputWeight.style.top = (y1+y2)/2 + cnv.offsetTop + "px";
+            inputWeight.style.left = (x1+x2)/2 + cnv.offsetLeft + "px";
             window.j = i;
             return true;
         }
@@ -100,32 +102,42 @@ const Edge = function(node, dist = 1, color = "black"){
 Node.prototype = {
     draw : function(){
         fillArc(this.x, this.y, this.radius);
-        ctx.fillStyle = "white";
+        strokeArc(this.x, this.y, this.radius, "black");
+        ctx.fillStyle = "black";
+        ctx.font = "bold 15px monospace";
         ctx.fillText(this.num, this.x, this.y);
+        ctx.font = "15px monospace";
     },
     stroke : function(){
-        strokeArc(this.x, this.y, this.radius);
+        strokeArc(this.x, this.y, this.radius, "#e8534f");
     },
     drawLink: function(){
         for (let j = 0; j < this.edges.length; j++) {
             line(this.x, this.y, this.edges[j].neighbour.x, this.edges[j].neighbour.y, this.edges[j].color);
             // Отображение веса ребра
-            ctx.fillStyle = "blue";
-            let x = (this.x + this.edges[j].neighbour.x)/2;
-            let y = (this.y + this.edges[j].neighbour.y)/2;
-            if (Math.abs(this.y - this.edges[j].neighbour.y) <= 100){
-                ctx.fillText(this.edges[j].distance, x, y+20);
+            ctx.fillStyle = "black";
+
+            let d = 15;
+            let x1 = (this.x + this.edges[j].neighbour.x)/2;
+            let y1 = (this.y + this.edges[j].neighbour.y)/2;
+            
+            let a_x = x1 - this.x;
+            let a_y = y1 - this.y;
+            
+            let x2 = (d / Math.sqrt(1 + (a_x/a_y)**2)) + x1;
+            let y2 = Math.sqrt(d**2 - (x2-x1)**2) + y1;
+
+            if (a_x*a_y > 0){
+                x2 = 2*x1 - x2;
             }
-            else{
-                ctx.fillText(this.edges[j].distance, x+20, y);
-            }
+            ctx.fillText(this.edges[j].distance, x2, y2);   
+
         }
     },   
 }
+
 inputWeight.onchange = function(){
-    let t = Number.parseInt(this.value);
-    console.log(typeof t);
-    node[window.i].edges[window.j].distance = t;
+    node[window.i].edges[window.j].distance = Number.parseInt(this.value);
     this.style.display = "none";
     this.value = "";
 }
@@ -214,8 +226,8 @@ for (let i = 0; i < 5; i++){
     node.push(new Node(50 + (i*60), 50, 20, i+1));
 }
 node[0].edges.push(new Edge(node[2], 2));
-node[0].edges.push(new Edge(node[3], 3));
-node[0].edges.push(new Edge(node[4], 4));
+//node[0].edges.push(new Edge(node[3], 3));
+//node[0].edges.push(new Edge(node[4], 4));
 // Отрисовка редактора
 setInterval(function(){
     ctx.clearRect(0, 0, cnv.width, cnv.height);

@@ -29,8 +29,6 @@ export function dijkstra(node, s){
     
     while (!isEmpty(unvisited)){
         current = min(unvisited);
-        // console.log(unvisited);
-        // console.log("current: "+ current);
         if (node[current].edges.length > 0){
             node[current].edges.forEach(function(edge){
                 let idx = edge.neighbour.num - 1;

@@ -15,18 +15,11 @@ html, body{
     grid-template-rows: 600px; 
 }
 
-.grid div {
-    /* background-color: brown; */
-    /* padding: 5px; */
-    
-    /* font-size: 20px; */
-    /* color: aliceblue;  */
+canvas {
+    width: 599px;
+    height: 599px;
 }
-.grid div:nth-child(2){
-    padding: 0px;
-    color: black;
 
-}
 #input-weight{
     display: none;
     position: absolute;
@@ -52,27 +45,21 @@ html, body{
     cursor: pointer;
     position: relative;
     z-index: 5;
-    /* border: 1px solid black; */
     border-top: 1px solid black;
     border-right: 1px solid black;
 }
 
 #tabs .whiteborder{
     color: #222022;
-    /* border: 1px solid black; */
     border-bottom: 1px solid #f0f0f0;
     background-color: #f0f0f0;
-    /* border-radius: 5px 5px 0px 0px; */
 }
 #tabs .tabContent{
     font-size: 13px;
-    /* width: 300px; */
-    /* height: 60px; */
     border: 1px solid black;
     position: relative;
     top: -1px;
     padding: 10px;
-    /* border-radius: 0 0 5px 5px; */
     z-index: 1;
     background-color: #f0f0f0;
 }

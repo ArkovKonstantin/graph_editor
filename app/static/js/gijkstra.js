@@ -34,9 +34,11 @@ export function dijkstra(node, s){
                 if (unvisited[idx] > unvisited[current] + edge.distance){
                     unvisited[idx] = unvisited[current] + edge.distance;
                     prev[idx] = current;
+                    
                 }
             });            
         }
+        
         visited[current] = unvisited[current];
         delete unvisited[current];
 

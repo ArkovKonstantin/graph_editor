@@ -3,8 +3,8 @@ let cnv = document.getElementById("canvas");
 let ctx = cnv.getContext("2d");
 let inputWeight = document.getElementById("input-weight");
 
-cnv.height = 600;
-cnv.width = 600;
+cnv.height = 599;
+cnv.width = 599;
 //cnv.style.backgroundColor = "#b4b4b4";
 //cnv.style.backgroundImage = "url(setka.png)";
 cnv.style.border = "1px solid black";
@@ -19,8 +19,8 @@ ctx.textBaseline="middle";
 ctx.textAlign = "center";
 
 
-const fillArc = function (x, y, r) {
-    ctx.fillStyle = "#f0f0f0";
+const fillArc = function (x, y, r, c) {
+    ctx.fillStyle = c;
     ctx.beginPath();
     ctx.arc(x, y, r, 0, 2*Math.PI, false)
     ctx.fill();
@@ -92,6 +92,8 @@ const Node = function (x, y, radius, num){
     this.posX = null;
     this.posY = null;
     this.link = false;
+    this.dist = Infinity;
+    this.color = "#f0f0f0"; 
 }
 const Edge = function(node, dist = 1, color = "black"){
     this.neighbour = node;
@@ -101,7 +103,7 @@ const Edge = function(node, dist = 1, color = "black"){
 
 Node.prototype = {
     draw : function(){
-        fillArc(this.x, this.y, this.radius);
+        fillArc(this.x, this.y, this.radius, this.color);
         strokeArc(this.x, this.y, this.radius, "black");
         ctx.fillStyle = "black";
         ctx.font = "bold 15px monospace";

@@ -230,8 +230,9 @@ for (let i = 0; i < 5; i++){
 node[0].edges.push(new Edge(node[2], 2));
 //node[0].edges.push(new Edge(node[3], 3));
 //node[0].edges.push(new Edge(node[4], 4));
+
 // Отрисовка редактора
-setInterval(function(){
+function draw_red(){
     ctx.clearRect(0, 0, cnv.width, cnv.height);
     // Отрисовка события соединеня выбранной вершины
     if (nodeForLink && nodeForLink.link){
@@ -248,4 +249,6 @@ setInterval(function(){
             node[i].stroke();
         };
     }
-})
+    requestAnimationFrame(draw_red);
+}
+document.addEventListener("DOMContentLoaded", function(){requestAnimationFrame(draw_red)});

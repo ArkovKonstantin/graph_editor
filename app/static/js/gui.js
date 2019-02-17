@@ -23,29 +23,48 @@ function fun(c, d){
     }
     setTimeout(fun, 2000, ++c, d);
 }
-testBtn.onclick = function(){
-    if (this.count < (log.length)*2){
-        if (this.count % 2 == 0){
-            if (window.count >= 0){
-                window.log[window.count].color = "#e8534f";
-                
-            }
+function draw_relax(progress, par){
+    ctx.lineWidth = 5;
+    let x1 = par.node.x, y1 = par.node.y,
+    x2 = par.edge.neighbour.x, y2 = par.edge.neighbour.y;
+    //console.log('y '+ y2);
+    let k = (y2-y1)/(x2-x1);
+    let b = (x2*y1-x1*y2)/(x2-x1);
+    let x = progress*Math.abs(x2-x1) + Math.min(x1, x2), y = k*x + b; 
+    line(x1, y1, x, y, "#ff8a3d");
+    
+    ctx.lineWidth = 2;
+}
+function animate(options){
+    let start = performance.now();
+    requestAnimationFrame(function animate(time){
+        let timeFraction = (time - start)/options.duration;
+        if (timeFraction > 1) timeFraction = 1;
+        let progress = options.timing(timeFraction);
+        options.draw(progress, options.par);
+
+        if (timeFraction < 1){
+            requestAnimationFrame(animate);
         }
         else{
-            // if neibhour
-            let node_obj = window.log[window.count];
-            console.log("Релаксация");
-            let depth = node_obj.edges.length - 1;
-            fun(count, depth); 
-            window.count -= 1;
-                // Релаксация вершин
-            //console.log(window.log[window.count]);
+            //Конец анимации
+            options.par.edge.color = "#ff8a3d";
         }
-        ++this.count;
+    }); 
 
-    }
-     
 }
+testBtn.onclick = function(){
+    let par = {edge: node[0].edges[0], node: node[0]} // параметры для этой функции
+    animate({
+        duration: 1300,
+        timing: function(timeFraction){ // скорость анимации
+            return timeFraction;
+        },
+        draw: draw_relax, // функция, определенный шаг алгоритма
+        par: par
+    });    
+}
+
 btnRun.onclick = function(){
     //console.log(node);
     clearPaths();

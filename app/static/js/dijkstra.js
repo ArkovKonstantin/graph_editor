@@ -1,4 +1,5 @@
 "use strict";
+
 // Анимация релаксации ребра
 export function drawRelax(progress, par) {
     ctx.lineWidth = 5;
@@ -9,9 +10,12 @@ export function drawRelax(progress, par) {
     let b = (x2 * y1 - x1 * y2) / (x2 - x1);
     let x = progress * Math.abs(x2 - x1) + Math.min(x1, x2), y = k * x + b;
     line(x1, y1, x, y, "#ff8a3d");
-    if (progress == 1) { par.edge.color = "#ff8a3d" }
+    if (progress == 1) {
+        par.edge.color = "#ff8a3d"
+    }
     ctx.lineWidth = 2;
 }
+
 // Анимация выбора узла
 // par = {node, rules:[{attr, startColor, finishColor}, {...}]}
 export function fade(progress, par) {
@@ -86,8 +90,8 @@ export function dijkstra(node, s) {
         "par": {
             node: node[s],
             rules: [
-                { attr: 'borderColor', startColor: [0, 0, 0], finishColor: [231, 144, 72] },
-                { attr: 'textColor', startColor: [0, 0, 0], finishColor: [231, 144, 72] }
+                {attr: 'borderColor', startColor: [0, 0, 0], finishColor: [231, 144, 72]},
+                {attr: 'textColor', startColor: [0, 0, 0], finishColor: [231, 144, 72]}
             ]
         },
         "dist": dist
@@ -102,9 +106,9 @@ export function dijkstra(node, s) {
             "par": {
                 node: node[current],
                 rules: [
-                    { attr: 'color', startColor: [240, 240, 240], finishColor: [81, 186, 108] },
-                    { attr: 'borderColor', startColor: [231, 144, 72], finishColor: [81, 186, 108] },
-                    { attr: 'textColor', startColor: [231, 144, 72], finishColor: [250, 250, 250] }
+                    {attr: 'color', startColor: [240, 240, 240], finishColor: [81, 186, 108]},
+                    {attr: 'borderColor', startColor: [231, 144, 72], finishColor: [81, 186, 108]},
+                    {attr: 'textColor', startColor: [231, 144, 72], finishColor: [250, 250, 250]}
                 ]
             }
         }]);
@@ -118,22 +122,24 @@ export function dijkstra(node, s) {
                     prev[idx] = current;
                 }
                 // Анимация релаксации
-                if (unvisited[idx]) { dist[idx] = unvisited[idx] };
-                animation_seq.push([{
-                    "fun": drawRelax,
-                    "duration": 1000,
-                    "par": { edge: edge, node: node[current] },
-                    "dist": dist
-                }, {
-                    "fun": fade,
-                    "duration": 1000,
-                    "par": {
-                        node: edge.neighbour,
-                        rules: [
-                            { attr: 'borderColor', startColor: [0, 0, 0], finishColor: [231, 144, 72] },
-                            { attr: 'textColor', startColor: [0, 0, 0], finishColor: [231, 144, 72] }]
-                    }
-                }])
+                if (unvisited[idx]) {
+                    dist[idx] = unvisited[idx];
+                    animation_seq.push([{
+                        "fun": drawRelax,
+                        "duration": 1000,
+                        "par": {edge: edge, node: node[current]},
+                        "dist": dist
+                    }, {
+                        "fun": fade,
+                        "duration": 1000,
+                        "par": {
+                            node: edge.neighbour,
+                            rules: [
+                                {attr: 'borderColor', startColor: [0, 0, 0], finishColor: [231, 144, 72]},
+                                {attr: 'textColor', startColor: [0, 0, 0], finishColor: [231, 144, 72]}]
+                        }
+                    }]);
+                }
                 dist = {};
 
             });
@@ -147,14 +153,14 @@ export function dijkstra(node, s) {
             "par": {
                 node: node[current],
                 rules: [
-                    { attr: 'color', startColor: [81, 186, 108], finishColor: [231, 144, 72] },
-                    { attr: 'borderColor', startColor: [81, 186, 108], finishColor: [231, 144, 72] }
+                    {attr: 'color', startColor: [81, 186, 108], finishColor: [231, 144, 72]},
+                    {attr: 'borderColor', startColor: [81, 186, 108], finishColor: [231, 144, 72]}
                 ]
             }
         }]);
 
     }
     // console.log(visited, prev);
-    return { visited, prev, animation_seq }
+    return {visited, prev, animation_seq}
 }
 

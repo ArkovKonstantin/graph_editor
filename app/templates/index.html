@@ -10,7 +10,8 @@
     <link rel="stylesheet", href="../static/css/style.css">
     <script defer src="../static/js/redactor.js"></script>
     <script type = "module", defer src="../static/js/gui.js"></script>
-    <title>Document</title>
+    <script type="text/javascript" src="fade.js"></script>
+    <title>Graph Editor</title>
 </head>
 <body>
 
@@ -43,6 +44,9 @@
                     paths between nodes in a graph, which may represent,
                     for example, road networks.
                 </p>
+                <div id="startVertex">
+                    <span>Start Vertex: </span><input id="startNode" type="input" size="2">
+                </div>
                 <input type="button" value="Run" id="btn_run">
                 <input type="button" value="Clear" id="btn_stop">
                 <input type="button" value="Next" id="testBtn">

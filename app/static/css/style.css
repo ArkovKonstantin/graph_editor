@@ -69,3 +69,6 @@ canvas {
 #tabs .show{
     display: block;
 }
+#startVertex{
+    padding-bottom: 6px;
+}

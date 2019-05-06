@@ -9,18 +9,24 @@ export function drawRelax(progress, par) {
     let b = (x2 * y1 - x1 * y2) / (x2 - x1);
     let x = progress * Math.abs(x2 - x1) + Math.min(x1, x2), y = k * x + b;
     line(x1, y1, x, y, "#ff8a3d");
-
+    if (progress == 1) { par.edge.color = "#ff8a3d" }
     ctx.lineWidth = 2;
 }
-// Анимация выбора минимального узла
-function selectMin(progress, par) {
-
-    par.node.color = "#fff"; //зеленый
-    if (progress == 1){
-        // Конец анимации
-        // вернуть дефолтный
-    }
+// Анимация выбора узла
+// par = {node, rules:[{attr, startColor, finishColor}, {...}]}
+export function fade(progress, par) {
+    par.rules.forEach(function (rule) {
+        let curColor = 'rgb(';
+        for (let i = 0; i < rule.startColor.length; i++) {
+            let delta = Math.floor((rule.finishColor[i] - rule.startColor[i]) * progress);
+            delta = rule.startColor[i] + delta;
+            curColor += delta;
+            curColor += (i != rule.startColor.length - 1) ? ',' : ')';
+        }
+        par.node[rule.attr] = curColor;
+    })
 }
+
 
 // Возпроизведение анимации
 export function animate(options) {
@@ -34,10 +40,6 @@ export function animate(options) {
 
         if (timeFraction < 1) {
             requestAnimationFrame(animate);
-        }
-        else {
-            //Конец анимации
-            options.par.edge.color = "#ff8a3d";
         }
     });
 }
@@ -63,40 +65,96 @@ function min(obj) {
 
 export function dijkstra(node, s) {
     let animation_seq = []; // Последовательность анимирующих функций
-    console.log('node');
-    console.log(node);
+    // console.log('node');
+    // console.log(node);
     let unvisited = {};
+    let dist = {};
     let visited = {};
     let prev = {};
     let current = null;
     node.forEach(function (el, idx) {
         unvisited[idx] = Infinity;
+        dist[idx] = "Inf";
+
     });
     unvisited[s] = 0;
-
+    dist[s] = "0";
+    // Анимация инициализации
+    animation_seq.push([{
+        "fun": fade,
+        "duration": 200,
+        "par": {
+            node: node[s],
+            rules: [
+                { attr: 'borderColor', startColor: [0, 0, 0], finishColor: [231, 144, 72] },
+                { attr: 'textColor', startColor: [0, 0, 0], finishColor: [231, 144, 72] }
+            ]
+        },
+        "dist": dist
+    }]);
+    dist = {};
     while (!isEmpty(unvisited)) {
         current = min(unvisited);
-        //Добавдение кадра анимации
-        animation_seq.push({"fun": selectMin, "arg": node[current]});
+        // Выбор минимальной вершины
+        animation_seq.push([{
+            "fun": fade,
+            "duration": 600,
+            "par": {
+                node: node[current],
+                rules: [
+                    { attr: 'color', startColor: [240, 240, 240], finishColor: [81, 186, 108] },
+                    { attr: 'borderColor', startColor: [231, 144, 72], finishColor: [81, 186, 108] },
+                    { attr: 'textColor', startColor: [231, 144, 72], finishColor: [250, 250, 250] }
+                ]
+            }
+        }]);
         if (node[current].edges.length > 0) {
             node[current].edges.forEach(function (edge) {
                 let idx = edge.neighbour.num - 1;
-                // Добавление кадра анимаци
-                let frame = {"fun": NaN, "args": NaN};
-                animation_seq.push(frame);
+
                 // Релаксация ребра
                 if (unvisited[idx] > unvisited[current] + edge.distance) {
                     unvisited[idx] = unvisited[current] + edge.distance;
                     prev[idx] = current;
                 }
+                // Анимация релаксации
+                if (unvisited[idx]) { dist[idx] = unvisited[idx] };
+                animation_seq.push([{
+                    "fun": drawRelax,
+                    "duration": 1000,
+                    "par": { edge: edge, node: node[current] },
+                    "dist": dist
+                }, {
+                    "fun": fade,
+                    "duration": 1000,
+                    "par": {
+                        node: edge.neighbour,
+                        rules: [
+                            { attr: 'borderColor', startColor: [0, 0, 0], finishColor: [231, 144, 72] },
+                            { attr: 'textColor', startColor: [0, 0, 0], finishColor: [231, 144, 72] }]
+                    }
+                }])
+                dist = {};
+
             });
         }
 
         visited[current] = unvisited[current];
         delete unvisited[current];
+        animation_seq.push([{
+            "fun": fade,
+            "duration": 600,
+            "par": {
+                node: node[current],
+                rules: [
+                    { attr: 'color', startColor: [81, 186, 108], finishColor: [231, 144, 72] },
+                    { attr: 'borderColor', startColor: [81, 186, 108], finishColor: [231, 144, 72] }
+                ]
+            }
+        }]);
 
     }
-    console.log(visited, prev);
-    return {visited, prev, animation_seq}
+    // console.log(visited, prev);
+    return { visited, prev, animation_seq }
 }
 

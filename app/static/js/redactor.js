@@ -40,8 +40,8 @@ const line = function (x0, y0, x, y, color) {
     ctx.beginPath();
     ctx.moveTo(x0, y0);
     ctx.lineTo(x, y);
-    ctx.closePath();
     ctx.stroke();
+    ctx.closePath();
 }
 
 const triangle = function (v1, v2, v3) {
@@ -75,54 +75,88 @@ function division(coord1, coord2, k) {
     return {x, y}
 }
 
+function getLinearCoeff(coord1, coord2) {
+    let k = (coord2.y - coord1.y) / (coord2.x - coord1.x);
+    let b = (coord2.x * coord1.y - coord1.x * coord2.y) / (coord2.x - coord1.x);
+    return {k, b}
+}
+
 const isCursorInNode = function (x, y, node) {
     if (((x - node.x) ** 2 + (y - node.y) ** 2) <= node.radius ** 2) {
         return true;
     }
 };
 // Условие килка на ребро
-const isCursorInEdge = function (x, y, node) {
-    let delta = 40;
-    let x1 = node.x, y1 = node.y;
+const isCursorInEdge = function (x, y, node) {  // TODO
     //console.log(e);
+    let coord1 = {x: node.x, y: node.y};
+    let x1 = node.x, y1 = node.y;
     for (let i = 0; i < node.edges.length; i++) {
-        let coord1 = {x: node.x, y: node.y};
         let coord2 = {x: node.edges[i].neighbour.x, y: node.edges[i].neighbour.y};
-        let coord_top1 = perpendicular(coord1, coord2, 10);
-        let coord_top2 = perpendicular(coord2, coord1, 10);
-        // ctx.strokeStyle = "red";
+        let coord_center = division(coord1, coord2, 1 / 2);
+        // console.log(coord_center);
+        let coord_bot1 = perpendicular(coord1, coord2, 15),
+            coord_bot2 = perpendicular(coord2, coord1, 15);
+        let coord_top1 = perpendicular(coord1, coord2, 15, -1), // position = -1 -> top
+            coord_top2 = perpendicular(coord2, coord1, 15, -1);
+        let coord_center_bot = perpendicular(coord1, coord_center, 15),
+            coord_center_top = perpendicular(coord1, coord_center, 15, -1);
+        // Верхняя граница
+        let linearC = getLinearCoeff(coord_top1, coord_top2);
+        let top_k = linearC.k, top_b = linearC.b;
+        // Нижняя граница
+        linearC = getLinearCoeff(coord_bot1, coord_bot2);
+        let bot_k = linearC.k, bot_b = linearC.b; //TODO left right
+        // Присоединенный узел
+        linearC = getLinearCoeff(coord_bot1, coord_top1);
+        let joined_k = linearC.k, joined_b = linearC.b;
+        // Центр ребра
+        linearC = getLinearCoeff(coord_center_top, coord_center_bot);
+        let center_k = linearC.k, center_b = linearC.b;
+        // Условие клика на ребро
+        // console.log("x = " + x); console.log("y = "+y);
+        if ((y >= top_k * x + top_b) && (y <= bot_k * x + bot_b) &&
+            (y >= joined_k * x + joined_b) && (y <= center_k * x + center_b)) {
+
+            console.log("WEIGHT");
+            return true
+        }
+        // if(y >= top_k * x + top_b){
+        //     console.log("ниже top");
+        // }
+        // line(0, 0, coord_top1.x, coord_top1.y);
         // console.log(coord_top1);
-        line(0, 0, coord_top1.x, coord_top1.y);
 
-        let x2 = node.edges[i].neighbour.x, y2 = node.edges[i].neighbour.y;
-
-        if (Math.abs(x1 - x2) <= delta) {
-            if (y < Math.max(y1, y2) - node.radius / 2 && y > Math.min(y1, y2) + node.radius / 2 &&
-                x >= Math.min(x1, x2) - 8 && x <= Math.max(x1, x2) + 8) {
-                //Отображение ввода для веса TODO fix
-                inputWeight.style.display = "block";
-                inputWeight.focus();
-                inputWeight.style.top = (y1 + y2) / 2 + "px";
-                inputWeight.style.left = (x1 + x2) / 2 + "px";
-                window.j = i;
-                return true;
-            }
-        }
-
-        let k = (y2 - y1) / (x2 - x1);
-        let b = (x2 * y1 - x1 * y2) / (x2 - x1);
-        // TODO perpendicular
-        if ((y > k * x + b - delta) && (y <= k * x + b + delta) &&
-            (x >= Math.min(x1, x2) + node.radius / 2) && (x <= Math.max(x1, x2) - node.radius / 2)) {
-            //Отображение ввода для веса
-            inputWeight.style.display = "block";
-            inputWeight.focus();
-            inputWeight.style.top = (y1 + y2) / 2 + cnv.offsetTop + "px";
-            inputWeight.style.left = (x1 + x2) / 2 + cnv.offsetLeft + "px";
-            window.j = i;
-            return true;
-        }
+        // let x2 = node.edges[i].neighbour.x, y2 = node.edges[i].neighbour.y;
+        //
+        // if (Math.abs(x1 - x2) <= delta) {
+        //     if (y < Math.max(y1, y2) - node.radius / 2 && y > Math.min(y1, y2) + node.radius / 2 &&
+        //         x >= Math.min(x1, x2) - 8 && x <= Math.max(x1, x2) + 8) {
+        //         //Отображение ввода для веса TODO fix
+        //         inputWeight.style.display = "block";
+        //         inputWeight.focus();
+        //         inputWeight.style.top = (y1 + y2) / 2 + "px";
+        //         inputWeight.style.left = (x1 + x2) / 2 + "px";
+        //         window.j = i;
+        //         return true;
+        //     }
+        // }
+        //
+        // let k = (y2 - y1) / (x2 - x1);
+        // let b = (x2 * y1 - x1 * y2) / (x2 - x1);
+        // // TODO perpendicular
+        // if ((y > k * x + b - delta) && (y <= k * x + b + delta) &&
+        //     (x >= Math.min(x1, x2) + node.radius / 2) && (x <= Math.max(x1, x2) - node.radius / 2)) {
+        //     //Отображение ввода для веса
+        //     inputWeight.style.display = "block";
+        //     inputWeight.focus();
+        //     inputWeight.style.top = (y1 + y2) / 2 + cnv.offsetTop + "px";
+        //     inputWeight.style.left = (x1 + x2) / 2 + cnv.offsetLeft + "px";
+        //     window.j = i;
+        //     return true;
+        // }
     }
+    return true
 };
 
 function contains(arr, obj) {
@@ -134,14 +168,16 @@ function contains(arr, obj) {
     return false
 }
 
-function isBidirectional(node1, node2) {
+function isLinked(node1, node2) {
     let bidirectIdx = null;
     for (let i = 0; i < node2.edges.length; i++) {
-        let obj1 = Object.assign({}, node1); obj1.edges = null;
-        let obj2 = Object.assign({}, node2.edges[i].neighbour); obj2.edges = null;
+        let obj1 = Object.assign({}, node1);
+        obj1.edges = null;
+        let obj2 = Object.assign({}, node2.edges[i].neighbour);
+        obj2.edges = null;
         // console.log(obj1);
         // console.log(obj2);
-        if (JSON.stringify(obj1) === JSON.stringify(obj2)){
+        if (JSON.stringify(obj1) === JSON.stringify(obj2)) {
             bidirectIdx = i;
             break;
         }
@@ -192,18 +228,18 @@ Node.prototype = {
     },
     drawLink: function () {
         for (let j = 0; j < this.edges.length; j++) {
-            let bidirectIdx = isBidirectional(this, this.edges[j].neighbour);
+            let bidirectIdx = isLinked(this, this.edges[j].neighbour);
             // console.log(bidirectIdx);
-            if (bidirectIdx != null){
-                console.log(this.edges[j].neighbour.edges[bidirectIdx].drawn);
-                if(!this.edges[j].neighbour.edges[bidirectIdx].drawn){
+            if (bidirectIdx != null) {
+                //console.log(this.edges[j].neighbour.edges[bidirectIdx].drawn);
+                if (!this.edges[j].neighbour.edges[bidirectIdx].drawn) {
                     // this.edges[j].drawn = true;
                     line(this.x, this.y, this.edges[j].neighbour.x,
-                         this.edges[j].neighbour.y, this.edges[j].color);
+                        this.edges[j].neighbour.y, this.edges[j].color);
                 }
-            }else{
+            } else {
                 line(this.x, this.y, this.edges[j].neighbour.x,
-                     this.edges[j].neighbour.y, this.edges[j].color);
+                    this.edges[j].neighbour.y, this.edges[j].color);
                 this.edges[j].drawn = true;
             }
             // Отображение веса ребра
@@ -273,9 +309,13 @@ window.onmousedown = function (e) {
         if (isCursorInNode(x, y, node[i])) {
             node[i].selected = true;
             selectedNode = node[i];
-            //Соединение с выбранной вершиной
+            // Соединение с выбранной вершиной
             if (nodeForLink && nodeForLink.link && (node[i].num != nodeForLink.num)) {
-                nodeForLink.edges.push(new Edge(node[i]));
+                // Проверка на существование связи с выбранным узлом
+                let idx = isLinked(node[i], nodeForLink);
+                if (idx == null) {
+                    nodeForLink.edges.push(new Edge(node[i]));
+                }
                 nodeForLink.link = false;
                 nodeForLink = null;
             }
@@ -312,7 +352,7 @@ cnv.onclick = function (e) {
         if (isCursorInNode(x, y, node[i])) {
             break;
         }
-        if (isCursorInEdge(x, y, node[i], e)) {
+        if (isCursorInEdge(x, y, node[i])) {
             window.i = i;
             break;
         }

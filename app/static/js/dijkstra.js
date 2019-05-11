@@ -5,7 +5,6 @@ export function drawRelax(progress, par) {
     ctx.lineWidth = 5;
     let x1 = par.node.x, y1 = par.node.y,
         x2 = par.edge.neighbour.x, y2 = par.edge.neighbour.y;
-    //console.log('y '+ y2);
     let k = (y2 - y1) / (x2 - x1);
     let b = (x2 * y1 - x1 * y2) / (x2 - x1);
     let x = progress * Math.abs(x2 - x1) + Math.min(x1, x2), y = k * x + b;
@@ -36,7 +35,6 @@ export function fade(progress, par) {
 export function animate(options) {
     let start = performance.now();
     requestAnimationFrame(function animate(time) {
-        // console.log(time + '  time');
         let timeFraction = (time - start) / options.duration;
         if (timeFraction > 1) timeFraction = 1;
         let progress = options.timing(timeFraction);
@@ -69,8 +67,6 @@ function min(obj) {
 
 export function dijkstra(node, s) {
     let animation_seq = []; // Последовательность анимирующих функций
-    // console.log('node');
-    // console.log(node);
     let unvisited = {};
     let dist = {};
     let visited = {};
@@ -114,7 +110,7 @@ export function dijkstra(node, s) {
         }]);
         if (node[current].edges.length > 0) {
             node[current].edges.forEach(function (edge) {
-                let idx = edge.neighbour.num - 1;
+                let idx = edge.neighbour.idx;
 
                 // Релаксация ребра
                 if (unvisited[idx] > unvisited[current] + edge.distance) {
@@ -160,7 +156,6 @@ export function dijkstra(node, s) {
         }]);
 
     }
-    // console.log(visited, prev);
     return {visited, prev, animation_seq}
 }
 

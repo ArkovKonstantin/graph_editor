@@ -31,8 +31,6 @@ function fun(c, d) {
 testBtn.onclick = function () {
     let animationStep = animation_seq.shift();
     animationStep.forEach(function (frame) {
-        // console.log("frame");
-        // console.log(frame);
         animate({
             duration: frame.duration,
             timing: function (timeFraction) { // скорость анимации
@@ -41,47 +39,17 @@ testBtn.onclick = function () {
             draw: frame.fun, // функция, визуализации определенного шага алгоритма
             par: frame.par
         });
-        // console.log(frame);
         if (frame.dist) {
-            console.log(frame.dist)
             for (let idx in frame.dist) {
                 node[idx].dist = frame.dist[idx];
             }
         }
-    })
-
-
-    // let par  = {
-    //     node: node[0],
-    //     rules: [
-    //         { attr: 'borderColor', startColor: [0, 0, 0], finishColor: [231, 144, 72] },
-    //         { attr: 'textColor', startColor: [0, 0, 0], finishColor: [231, 144, 72] }
-    //     ]
-    // };
-    // animate({
-    //     duration: 100,
-    //     timing: function(timeFraction){ // скорость анимации
-    //         return timeFraction;
-    //     },
-    //     draw: fade, // функция, визуализации определенного шага алгоритма
-    //     par: par
-    // });
-    // let par = {edge: node[0].edges[0], node: node[0]}; // параметры для этой функции
-    // animate({
-    //     duration: 800,
-    //     timing: function(timeFraction){ // скорость анимации
-    //         return timeFraction;
-    //     },
-    //     draw: drawRelax, // функция, визуализации определенного шага алгоритма
-    //     par: par
-    // });    
+    })    
 };
 
 btnRun.onclick = function () {
-    //console.log(node);
     clearPaths();
     let log = [];
-    // let start_node = Number.parseInt(startNode.value) - 1;
     let start_node = 0;
     let end_node = 3;
     let res = dijkstra(node, start_node);
@@ -102,26 +70,6 @@ btnRun.onclick = function () {
             }
         };
     })
-    // console.log('res');
-    // console.log(res);
-    //window.res = res;
-    //Отображение кратчайшего пути
-    // while(end_node != start_node){
-
-    //     node[res.prev[end_node]].edges.forEach(function(edge){ // {2: 1, 3: 2}
-    //         let idx = edge.neighbour.num - 1;
-    //         if (idx == end_node){
-    //             edge.color = "#e8534f";
-    //             log.push(edge.neighbour);
-    //         }
-    //     });
-    //     end_node = res.prev[end_node];
-    // }
-
-    // log.push(node[start_node]);
-    // window.log = log;
-    // window.count = log.length - 1;
-
 }
 
 window.onload = function () {
@@ -132,7 +80,6 @@ window.onload = function () {
 
 document.getElementById("tabs").onclick = function (e) {
     let target = e.target;
-    //console.log(e);
     if (target.className == "tab") {
         for (let i = 0; i < tab.length; i++) {
             if (tab[i] == target) {

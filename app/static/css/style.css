@@ -9,7 +9,7 @@ html, body{
 .grid {
     display: grid;
     padding-top: 40px;
-    grid-template-columns: 200px 600px 300px;
+    grid-template-columns: 300px 600px 300px;
     grid-gap: 30px;
     justify-content: center;
     grid-template-rows: 600px; 
@@ -28,8 +28,15 @@ canvas {
     height: 15px;
     width: 40px;
 }
-.algoritm-section{
+.description-section{
     padding: 0px;
+}
+.pseudocode-section{
+    /* padding: 7px; */
+    /* border-left  : 18px solid #f0f0f0; */
+    display: inline-block;
+    /* background-color: #f0f0f0; */
+    font-size: 13px;
 }
 #tabs{
     font-size: 0px;

@@ -9,6 +9,8 @@ let tabContent = document.getElementsByClassName("tabContent");
 let testBtn = document.getElementById("testBtn");
 let startNode = document.getElementById("startNode");
 let animation_seq = []; // Последовательность шагов визуализации
+let blocks = []; // Массив блоков псевдокода
+for (let i = 1; i < 5; i++) { blocks[i] = (document.getElementById("block-" + i)) }
 testBtn.count = 0;
 
 const clearPaths = function () {
@@ -29,22 +31,29 @@ function fun(c, d) {
     setTimeout(fun, 2000, ++c, d);
 }
 testBtn.onclick = function () {
+    for (let i = 1; i < 5; i++){
+        blocks[i].style.background = "rgba(214, 88, 117, 0.0)";        
+    }
     let animationStep = animation_seq.shift();
-    animationStep.forEach(function (frame) {
-        animate({
-            duration: frame.duration,
-            timing: function (timeFraction) { // скорость анимации
-                return timeFraction;
-            },
-            draw: frame.fun, // функция, визуализации определенного шага алгоритма
-            par: frame.par
-        });
-        if (frame.dist) {
-            for (let idx in frame.dist) {
-                node[idx].dist = frame.dist[idx];
-            }
-        }
-    })    
+    if (animationStep){
+        animationStep.forEach(function (frame) {
+            animate({
+                duration: frame.duration,
+                timing: function (timeFraction) { // скорость анимации
+                    return timeFraction;
+                },
+                draw: frame.fun, // функция, визуализации определенного шага алгоритма
+                par: frame.par
+            });
+            if (frame.dist) {
+                for (let idx in frame.dist) {
+                    node[idx].dist = frame.dist[idx];
+                }
+            };  
+            blocks[frame.block].style.background = "rgba(214, 88, 117, 0.4)"; 
+        })
+    }
+    
 };
 
 btnRun.onclick = function () {
@@ -69,6 +78,7 @@ btnRun.onclick = function () {
                 node[idx].dist = frame.dist[idx];
             }
         };
+        blocks[frame.block].style.background = "rgba(214, 88, 117, 0.4)";
     })
 }
 

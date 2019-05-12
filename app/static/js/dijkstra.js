@@ -81,6 +81,7 @@ export function dijkstra(node, s) {
     dist[s] = "0";
     // Анимация инициализации
     animation_seq.push([{
+        "block": 1,
         "fun": fade,
         "duration": 200,
         "par": {
@@ -97,6 +98,7 @@ export function dijkstra(node, s) {
         current = min(unvisited);
         // Выбор минимальной вершины
         animation_seq.push([{
+            "block": 2,
             "fun": fade,
             "duration": 600,
             "par": {
@@ -121,11 +123,13 @@ export function dijkstra(node, s) {
                 if (unvisited[idx]) {
                     dist[idx] = unvisited[idx];
                     animation_seq.push([{
+                        "block": 3,
                         "fun": drawRelax,
                         "duration": 1000,
                         "par": {edge: edge, node: node[current]},
                         "dist": dist
                     }, {
+                        "block": 3,
                         "fun": fade,
                         "duration": 1000,
                         "par": {
@@ -144,6 +148,7 @@ export function dijkstra(node, s) {
         visited[current] = unvisited[current];
         delete unvisited[current];
         animation_seq.push([{
+            "block": 4,
             "fun": fade,
             "duration": 600,
             "par": {

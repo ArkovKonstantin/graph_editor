@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,75 +8,147 @@
     <!-- <link rel="stylesheet", href="/static/css/style.css">
     <script defer src="/static/js/redactor.js"></script>
     <script type = "module", defer src="/static/js/gui.js"></script> -->
-    <link rel="stylesheet", href="../static/css/style.css">
+
+    <link rel="stylesheet" , href="../static/css/style.css">
     <script defer src="../static/js/redactor.js"></script>
-    <script type = "module", defer src="../static/js/gui.js"></script>
+    <script type="module" , defer src="../static/js/gui.js"></script>
     <title>Graph Editor</title>
 </head>
+
 <body>
 
-<div class="grid">
-    <div>
-        Graph data:
-        <textarea rows = 10>
-1
-2
-3
-4
-5
-            </textarea>
-    </div>
-
-    <div>
-        <canvas id="canvas"></canvas>
-        <input id="input-weight" type="text">
-    </div>
-
-    <div class="algoritm-section">
-        <div id="tabs">
-            <div class="tab whiteborder" style="border-left: 1px solid black;">Dijkstra</div>
-            <div class="tab">Dfs</div>
-            <div class="tab">Bfs</div>
-            <div class="tabContent">
-                Description:
-                <p>
-                    Dijkstra's algorithm is an algorithm for finding the shortest
-                    paths between nodes in a graph, which may represent,
-                    for example, road networks.
-                </p>
-                <div id="startVertex">
-                    <span>Start Vertex: </span><input id="startNode" type="input" size="2">
+    <div class="grid">
+        
+            <div style="font-size: 0">
+                <div style="font-size: 13px; margin-bottom: 8px;"><b>Pseudocode:</b></div>
+                <div style="display:inline-block;width: 18px; border-right: 2px solid black;">
+                        <pre style="font-size: 13px; margin: 0px; color: #383434;">
+01
+02
+03
+04
+05
+06
+07
+08
+09
+10
+11
+12
+13
+14</pre>
                 </div>
-                <input type="button" value="Run" id="btn_run">
-                <input type="button" value="Clear" id="btn_stop">
-                <input type="button" value="Next" id="testBtn">
+                
+                <div class="pseudocode-section">
+                    
+                    
+                
+<div>
+<pre style="margin: 0px;">
+ <b>function</b> dijkstra(<b>G</b>, <b>s</b>)
+  <b>for all</b> u ∈ V <b>do</b>:
+</pre>
+</div>
+<div id ="block-1" style="background: rgba(214, 88, 117, 0.0);">
+<pre style="margin: 0px;">
+    unv[u] = ∞
+    prev[u] = nil
+    v[u] = nil
+  unv[s] = 0
+</pre>
+</div>
+
+
+<div style="background: rgba(214, 88, 117, 0.0);">
+<pre style="margin: 0px;">
+  <b>while</b> unv &ne; &empty; <b>do</b>:
+</pre>                
+</div>
+
+<div id = "block-2" style="background: rgba(214, 88, 117, 0.0);">
+<pre style="margin: 0px;">
+    v = <b>Min</b>(unv)
+</pre>                
+</div>
+
+
+<div style="background: rgba(214, 88, 117, 0.0);">
+<pre style="margin: 0px;">
+    <b>for all</b> (u, v) &isin; E <b>do</b>:
+</pre>                
+</div>
+
+<div id="block-3" style="background: rgba(214, 88, 117, 0.0);">
+<pre style="margin: 0px;">
+      <b>if</b> unv[v] > unv[u] + w(u,v):
+        unv[v] = unv[u] + w(u,v)
+        prev[v] = u
+</pre>                
+</div>
+
+
+<div id="block-4" style="background: rgba(214, 88, 117, 0.0);">
+<pre style="margin: 0px;">
+    v[v] = unv[v] + w(u,v)
+    <b>delete</b> unv[v]
+</pre>                
+</div>
+
+</div>
+</div>
+
+
+
+            <div>
+                <canvas id="canvas"></canvas>
+                <input id="input-weight" type="text">
             </div>
-            <div class="tabContent">
-                Description:
-                <p>
-                    Depth-first search (DFS) is an algorithm for traversing or searching
-                    tree or graph data structures. One starts at the root (selecting some
-                    arbitrary node as the root in the case of a graph) and explores as
-                    far as possible along each branch before backtracking.
-                </p>
-                <input type="button" value="Run">
-                <input type="button" value="Clear">
-            </div>
-            <div class="tabContent">
-                Description:
-                <p>
-                    Breadth-first search (BFS) is an algorithm for traversing or searching
-                    tree or graph data structures. It starts at the tree root (or some arbitrary
-                    node of a graph, sometimes referred to as a 'search key') and explores the neighbor
-                    nodes first, before moving to the next level neighbors.
-                </p>
-                <input type="button" value="Run">
-                <input type="button" value="Clear">
+
+            <div class="description-section">
+                <div id="tabs">
+                    <div class="tab whiteborder" style="border-left: 1px solid black;">Dijkstra</div>
+                    <div class="tab">Dfs</div>
+                    <div class="tab">Bfs</div>
+                    <div class="tabContent">
+                        Description:
+                        <p>
+                            Dijkstra's algorithm is an algorithm for finding the shortest
+                            paths between nodes in a graph, which may represent,
+                            for example, road networks.
+                        </p>
+                        <div id="startVertex">
+                            <span>Start Vertex: </span><input id="startNode" type="input" size="2">
+                        </div>
+                        <input type="button" value="Run" id="btn_run">
+                        <input type="button" value="Clear" id="btn_stop">
+                        <input type="button" value="Next" id="testBtn">
+                    </div>
+                    <div class="tabContent">
+                        Description:
+                        <p>
+                            Depth-first search (DFS) is an algorithm for traversing or searching
+                            tree or graph data structures. One starts at the root (selecting some
+                            arbitrary node as the root in the case of a graph) and explores as
+                            far as possible along each branch before backtracking.
+                        </p>
+                        <input type="button" value="Run">
+                        <input type="button" value="Clear">
+                    </div>
+                    <div class="tabContent">
+                        Description:
+                        <p>
+                            Breadth-first search (BFS) is an algorithm for traversing or searching
+                            tree or graph data structures. It starts at the tree root (or some arbitrary
+                            node of a graph, sometimes referred to as a 'search key') and explores the neighbor
+                            nodes first, before moving to the next level neighbors.
+                        </p>
+                        <input type="button" value="Run">
+                        <input type="button" value="Clear">
+                    </div>
+                </div>
+
             </div>
         </div>
-
-    </div>
-</div>
 
 </body>
 

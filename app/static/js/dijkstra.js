@@ -1,14 +1,25 @@
 "use strict";
 
+function division(coord1, coord2, k) {
+    let x = (coord1.x + k * coord2.x) / (1 + k);
+    let y = (coord1.y + k * coord2.y) / (1 + k);
+    return { x, y }
+}
 // Анимация релаксации ребра
 export function drawRelax(progress, par) {
     ctx.lineWidth = 5;
-    let x1 = par.node.x, y1 = par.node.y,
-        x2 = par.edge.neighbour.x, y2 = par.edge.neighbour.y;
-    let k = (y2 - y1) / (x2 - x1);
-    let b = (x2 * y1 - x1 * y2) / (x2 - x1);
-    let x = progress * Math.abs(x2 - x1) + Math.min(x1, x2), y = k * x + b;
-    line(x1, y1, x, y, "#ff8a3d");
+    let coord1 = {x: par.node.x, y: par.node.y};
+    let coord2 = {x: par.edge.neighbour.x, y: par.edge.neighbour.y};
+
+    let l = Math.sqrt((coord2.x - coord1.x) ** 2 + (coord2.y - coord1.y) ** 2);
+    let m = (l - par.node.radius) / par.node.radius;
+    let v2 = division(coord1, coord2, m);
+    let v1 = division(coord2, coord1, m);
+    let k = (coord2.y - coord1.y) / (coord2.x - coord1.x);
+    let b = (coord2.x * coord1.y - coord1.x * coord2.y) / (coord2.x - coord1.x);
+
+    let x = progress * (v2.x - v1.x) + v1.x, y = k * x + b;
+    line(v1.x, v1.y, x, y, "#ff8a3d");
     if (progress == 1) {
         par.edge.color = "#ff8a3d"
     }

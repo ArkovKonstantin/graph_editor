@@ -7,15 +7,21 @@ let btnStop = document.getElementById("btn_stop");
 let tab = document.getElementsByClassName("tab");
 let tabContent = document.getElementsByClassName("tabContent");
 let testBtn = document.getElementById("testBtn");
-let startNode = document.getElementById("startNode");
+let startNode = document.getElementById("startNode"); startNode.value = 1;
 let animation_seq = []; // Последовательность шагов визуализации
 let blocks = []; // Массив блоков псевдокода
 for (let i = 1; i < 5; i++) { blocks[i] = (document.getElementById("block-" + i)) }
 testBtn.count = 0;
 
 const clearPaths = function () {
+    for (let i = 1; i < 5; i++){
+        blocks[i].style.background = "rgba(214, 88, 117, 0.0)";
+    }
     node.forEach(function (node) {
         node.color = "#f0f0f0";
+        node.textColor = "#000000";
+        node.borderColor = "#000000";
+        node.dist = "";
         node.edges.forEach(function (edge) {
             edge.color = "black";
         });
@@ -59,27 +65,29 @@ testBtn.onclick = function () {
 btnRun.onclick = function () {
     clearPaths();
     let log = [];
-    let start_node = 0;
-    let end_node = 3;
-    let res = dijkstra(node, start_node);
-    animation_seq = res.animation_seq;
-    let animationStep = animation_seq.shift();
-    animationStep.forEach(function (frame) {
-        animate({
-            duration: frame.duration,
-            timing: function (timeFraction) { // скорость анимации
-                return timeFraction;
-            },
-            draw: frame.fun, // функция, визуализации определенного шага алгоритма
-            par: frame.par
-        });
-        if (frame.dist) {
-            for (let idx in frame.dist) {
-                node[idx].dist = frame.dist[idx];
-            }
-        };
-        blocks[frame.block].style.background = "rgba(214, 88, 117, 0.4)";
-    })
+    let start_node = Number.parseInt(startNode.value);
+    if (!isNaN(start_node)) {
+        start_node--;
+        let res = dijkstra(node, start_node);
+        animation_seq = res.animation_seq;
+        let animationStep = animation_seq.shift();
+        animationStep.forEach(function (frame) {
+            animate({
+                duration: frame.duration,
+                timing: function (timeFraction) { // скорость анимации
+                    return timeFraction;
+                },
+                draw: frame.fun, // функция, визуализации определенного шага алгоритма
+                par: frame.par
+            });
+            if (frame.dist) {
+                for (let idx in frame.dist) {
+                    node[idx].dist = frame.dist[idx];
+                }
+            };
+            blocks[frame.block].style.background = "rgba(214, 88, 117, 0.4)";
+        })
+    }
 }
 
 window.onload = function () {

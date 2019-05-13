@@ -68,7 +68,6 @@ function perpendicular(coord1, coord2, distance, position = 1) {
     }
     return { x, y }
 }
-
 function division(coord1, coord2, k) {
     let x = (coord1.x + k * coord2.x) / (1 + k);
     let y = (coord1.y + k * coord2.y) / (1 + k);

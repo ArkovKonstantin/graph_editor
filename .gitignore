@@ -1,3 +1,5 @@
 .vscode/
 venv/
+graph_env/
 __pycache__/
+.idea/

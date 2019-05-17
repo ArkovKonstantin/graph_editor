@@ -1,5 +1,5 @@
 .vscode/
 venv/
+graph_env/
 __pycache__/
-*.pyc
 .idea/

@@ -10,3 +10,5 @@ Flask-WTF
 WTForrms
 SQLAlchemy-migrate
 flask-bootstrap
+flask-login
+flask-migrate

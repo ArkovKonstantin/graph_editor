@@ -17,8 +17,12 @@
 
 <body>
     <ul>
+        {% if current_user.is_anonymous %}
         <li><a href="/login">Sign In</a></li>
         <li><a href="/signup">Sign Up</a></li>
+        {% else %}
+        <li><a href = "{{ url_for('logout') }}">Logout</a></li>
+        {% endif %}
     </ul>
 
     <div class="grid">

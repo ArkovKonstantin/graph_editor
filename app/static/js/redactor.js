@@ -342,7 +342,7 @@ cnv.onclick = function (e) {
             for (let i = 0; i < node.length; i++) {
                 names.push(node[i].name);
             }
-            names.sort();
+            names.sort(function(a, b){return a - b});
             let missing_name = null;
             if (names[0] != 1){missing_name = 1};
             if (missing_name == null){

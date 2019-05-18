@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, redirect, url_for, flash
-from app import app
+from app import app, db
 from app.forms import LoginForm, RegisterForm
 from flask_login import current_user, login_user, logout_user
 from app.models import User
@@ -25,7 +25,7 @@ def login():
             flash('Invalid username or password')
             return redirect(url_for('login'))
 
-        login_user(user, remember=form.remeber.data)
+        login_user(user, remember=form.remember.data)
 
         return redirect(url_for("index"))
 
@@ -36,9 +36,16 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-
 @app.route('/signup', methods=['GET', 'POST'])
-def signup():
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
     form = RegisterForm()
-
-    return render_template('signup.html', form=form)
+    if form.validate_on_submit():
+        user = User(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Congratulations, you are now a registered user!')
+        return redirect(url_for('login'))
+    return render_template('signup.html', title='Register', form=form)

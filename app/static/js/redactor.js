@@ -396,6 +396,8 @@ for (let i = 0; i < 5; i++) {
     node.push(new Node(50 + (i * 60), 50, 20, i + 1, i));
 }
 node[0].edges.push(new Edge(node[2], 2));
+node[1].edges.push(new Edge(node[2], 6));
+node[1].edges.push(new Edge(node[0], 10));
 //node[0].edges.push(new Edge(node[3], 3));
 //node[0].edges.push(new Edge(node[4], 4));
 

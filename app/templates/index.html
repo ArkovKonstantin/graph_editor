@@ -12,18 +12,26 @@
     <link rel="stylesheet"  href="../static/css/style.css">
     <script defer src="../static/js/redactor.js"></script>
     <script type="module"  defer src="../static/js/gui.js"></script>
+    <script type=text/javascript src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+    <script type="text/javascript" defer src="../static/js/ajax_request.js"></script>
     <title>Graph Editor</title>
 </head>
 
 <body>
-    <ul>
-        {% if current_user.is_anonymous %}
-        <li><a href="/login">Sign In</a></li>
-        <li><a href="/signup">Sign Up</a></li>
-        {% else %}
-        <li><a href = "{{ url_for('logout') }}">Logout</a></li>
-        {% endif %}
-    </ul>
+    <div class="nav">
+        <ul>
+            {% if current_user.is_anonymous %}
+            <li><a href="/login">Sign In</a></li>
+            <li><a href="/signup">Sign Up</a></li>
+            {% else %}
+            <li id="save" style="float: left;"><a href = "#">Save</a></li>
+            <li id="open" style="float: left;"><a href = "#">Open</a></li>
+            <li><a href = "{{ url_for('logout') }}">Logout</a></li>
+            <li><a href = "#"><b>{{ current_user.username }}</b></a></li>
+            {% endif %}
+        </ul>
+    </div>
+    
 
     <div class="grid">
         
@@ -166,6 +174,13 @@
             
             </div>
         </div>
+
+        <!-- <form action="/get_len" method="post" name="form">
+            <label for="name">Введите текст:</label>
+            <input id="name" name="name" type="text">
+            <input id="get_len" type="button" value="Отправить">
+        </form>
+        <div id="len"></div> -->
 
 </body>
 

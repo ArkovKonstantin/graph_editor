@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, request, json
 from app import app, db
 from app.forms import LoginForm, RegisterForm
 from flask_login import current_user, login_user, logout_user
-from app.models import User
+from app.models import User, Graph
 
 
 @app.route('/')
@@ -49,3 +49,30 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('signup.html', title='Register', form=form)
+
+
+@app.route('/get_len', methods=['GET', 'POST'])
+def get_len():
+
+    graph_title = request.form['graph_title']
+    graph = request.form['graph']
+    # создание и сохранение графа в бд
+    g = Graph(title=graph_title, body=graph, author=current_user)
+    db.session.add(g)
+    db.session.commit()
+
+    return "OK"
+
+    # print(request.form)
+    # print("---------")
+    # print(graph, type(graph))
+    # print("---------")
+    # # name = request.form['name']
+    # d = dict(request.__dict__)
+    # for key, val in d.items():
+    #     # print(f"{key} : {val}")
+    #     print(key)
+
+    # return json.dumps({"len": 1})
+    #return graph
+    # return "OK"

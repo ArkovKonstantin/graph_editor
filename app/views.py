@@ -61,8 +61,32 @@ def save_graph():
     db.session.add(g)
     db.session.commit()
 
+
+    # for i in Graph.query.all():
+        # print(i)
+
     return "OK"
 
+@app.route('/del', methods=['POST'])
+def del_graph():
+
+    graph_title = request.form['graph_title']
+    # поиск и удаление графа
+    for g in current_user.graphs:
+        if g.title == graph_title:
+            db.session.delete(g)
+            db.session.commit()
+
+            break
+    # db.session.add(g)
+    # db.session.commit()
+    
+
+    
+    # for i in Graph.query.all():
+        # print(i)
+
+    return "OK"
 
 @app.route('/get_graph_lst', methods=['POST']) 
 def get_graph_lst():

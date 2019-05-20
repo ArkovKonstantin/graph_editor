@@ -5,6 +5,9 @@ html, body{
     height: 100%;
     font-family: monospace;
 }
+#graph_list {
+    border: 1px solid black;
+}
 .nav {
     width:1260px;
     /* height:50px; */
@@ -13,7 +16,7 @@ html, body{
     margin-left:-630px;
     background-color: royalblue;
 }
-ul {
+.nav ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -22,11 +25,11 @@ ul {
     width: 500 px;
 }
 
-li {
+.nav li {
     float: right;
 }
 
-li a {
+.nav li a {
     display: block;
     color: white;
     text-align: center;
@@ -34,7 +37,7 @@ li a {
     text-decoration: none;
 }
 
-li a:hover {
+.nav li a:hover {
     background-color: #111;
 }
 

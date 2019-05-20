@@ -7,6 +7,7 @@ let btnStop = document.getElementById("btn_stop");
 let tab = document.getElementsByClassName("tab");
 let tabContent = document.getElementsByClassName("tabContent");
 let testBtn = document.getElementById("testBtn");
+let backBtn = document.getElementById("back");
 let startNode = document.getElementById("startNode"); startNode.value = 1;
 let animation_seq = []; // Последовательность шагов визуализации
 let blocks = []; // Массив блоков псевдокода
@@ -27,6 +28,10 @@ const clearPaths = function () {
         });
     });
 };
+backBtn.onclick = function(){
+    document.getElementById("redactor").style.display = "block";
+    document.getElementById("graph_list").style.display = "none";
+}
 
 btnStop.onclick = clearPaths;
 function fun(c, d) {

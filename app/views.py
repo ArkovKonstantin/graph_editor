@@ -51,8 +51,8 @@ def register():
     return render_template('signup.html', title='Register', form=form)
 
 
-@app.route('/get_len', methods=['GET', 'POST'])
-def get_len():
+@app.route('/save', methods=['POST'])
+def save_graph():
 
     graph_title = request.form['graph_title']
     graph = request.form['graph']
@@ -63,16 +63,11 @@ def get_len():
 
     return "OK"
 
-    # print(request.form)
-    # print("---------")
-    # print(graph, type(graph))
-    # print("---------")
-    # # name = request.form['name']
-    # d = dict(request.__dict__)
-    # for key, val in d.items():
-    #     # print(f"{key} : {val}")
-    #     print(key)
 
-    # return json.dumps({"len": 1})
-    #return graph
-    # return "OK"
+@app.route('/get_graph_lst', methods=['POST']) 
+def get_graph_lst():
+    d = {}
+    for g in current_user.graphs:
+        d[g.title] = g.body
+
+    return json.dumps(d)    

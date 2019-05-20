@@ -18,6 +18,7 @@
 </head>
 
 <body>
+
     <div class="nav">
         <ul>
             {% if current_user.is_anonymous %}
@@ -115,7 +116,7 @@
 
 
 
-            <div>
+            <div id = "redactor">
                 <canvas id="canvas"></canvas>
                 <input id="input-weight" type="text">
                 <div>
@@ -127,6 +128,17 @@
                         <div style="padding-left:29px; margin-top:-10px; ">
                             right mouse btn - <i>delete</i>
                         </div>
+            </div>
+            <div id="graph_list" style="display:none;">
+                <ol id ="g_lst">
+                    <!-- <li>graph1 <a href="#">Upload</a> <a href="#">Delete</a></li>
+                    <li>graph1 <a href="#">Upload</a> <a href="#">Delete</a></li>
+                    <li>graph1 <a href="#">Upload</a> <a href="#">Delete</a></li> -->
+                </ol>
+                <input id="back" type="button" value="Back" style="margin-left:40px;">
+                <!-- <div id = "graph_el">graph1 <a href="#">Upload</a> <a href="#">Delete</a></div>
+                <div>graph2</div>
+                <div>graph3</div> -->
             </div>
 
             <div class="description-section">

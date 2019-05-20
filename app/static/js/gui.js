@@ -9,13 +9,14 @@ let tabContent = document.getElementsByClassName("tabContent");
 let testBtn = document.getElementById("testBtn");
 let backBtn = document.getElementById("back");
 let startNode = document.getElementById("startNode"); startNode.value = 1;
+let endNode = document.getElementById("endNode");
 let animation_seq = []; // Последовательность шагов визуализации
 let blocks = []; // Массив блоков псевдокода
 for (let i = 1; i < 5; i++) { blocks[i] = (document.getElementById("block-" + i)) }
 testBtn.count = 0;
 
 const clearPaths = function () {
-    for (let i = 1; i < 5; i++){
+    for (let i = 1; i < 5; i++) {
         blocks[i].style.background = "rgba(214, 88, 117, 0.0)";
     }
     node.forEach(function (node) {
@@ -28,7 +29,7 @@ const clearPaths = function () {
         });
     });
 };
-backBtn.onclick = function(){
+backBtn.onclick = function () {
     document.getElementById("redactor").style.display = "block";
     document.getElementById("graph_list").style.display = "none";
 }
@@ -42,11 +43,11 @@ function fun(c, d) {
     setTimeout(fun, 2000, ++c, d);
 }
 testBtn.onclick = function () {
-    for (let i = 1; i < 5; i++){
-        blocks[i].style.background = "rgba(214, 88, 117, 0.0)";        
+    for (let i = 1; i < 5; i++) {
+        blocks[i].style.background = "rgba(214, 88, 117, 0.0)";
     }
     let animationStep = animation_seq.shift();
-    if (animationStep){
+    if (animationStep) {
         animationStep.forEach(function (frame) {
             animate({
                 duration: frame.duration,
@@ -60,11 +61,31 @@ testBtn.onclick = function () {
                 for (let idx in frame.dist) {
                     node[idx].dist = frame.dist[idx];
                 }
-            };  
-            blocks[frame.block].style.background = "rgba(214, 88, 117, 0.4)"; 
+            };
+            blocks[frame.block].style.background = "rgba(214, 88, 117, 0.4)";
         })
     }
-    
+    else {
+        // рисуем путь он начальной до конечной вершины
+        console.log(window.prev);
+        // let end_node = 
+        let start_node = Number.parseInt(startNode.value);
+        let end_node = Number.parseInt(endNode.value);
+        if(!isNaN(end_node) && !isNaN(start_node)) {
+            start_node--;
+            end_node--;
+            while (end_node != start_node) {
+
+                node[window.prev[end_node]].edges.forEach(function (edge) {
+                    let idx = edge.neighbour.idx;
+                    if (idx == end_node) {
+                        edge.color = "red";
+                    }
+                });
+                end_node = window.prev[end_node];
+            }
+        }
+    }
 };
 
 btnRun.onclick = function () {
@@ -74,6 +95,7 @@ btnRun.onclick = function () {
     if (!isNaN(start_node)) {
         start_node--;
         let res = dijkstra(node, start_node);
+        window.prev = res.prev;
         animation_seq = res.animation_seq;
         let animationStep = animation_seq.shift();
         animationStep.forEach(function (frame) {

@@ -13,7 +13,7 @@ function save_graph() {
         graph["edges"][node[n].idx] = arr;
 
     }
-    console.log(graph);
+    // console.log(graph);
     graph = JSON.stringify(graph);
     let graph_title = prompt("Enter the title of the graph")
 
@@ -35,7 +35,7 @@ function upload(e) {
     let g_body = window.g_lst[g_title]
 
     let res = JSON.parse(g_body);
-    console.log(res);
+    // console.log(res);
     let u_nodes = res["nodes"];
     let u_edges = res["edges"];
     node = []
